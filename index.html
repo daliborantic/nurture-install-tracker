@@ -144,7 +144,7 @@ var WEEKLY_ALL={"2026-04-13":45,"2026-04-20":75,"2026-04-27":124,"2026-05-04":16
 var WEEKLY_DEPOT={"Scotland":{"2026-04-27":4,"2026-05-11":14,"2026-05-18":22,"2026-05-25":56,"2026-06-01":8,"2026-06-15":2},"South East":{"2026-04-27":1,"2026-05-04":18,"2026-05-11":23,"2026-05-18":26,"2026-05-25":25,"2026-06-01":23,"2026-06-15":2},"GJ South West":{"2026-04-27":4,"2026-05-04":17,"2026-05-11":27,"2026-05-18":9,"2026-05-25":24,"2026-06-01":6,"2026-06-08":3,"2026-06-15":1},"South West":{"2026-04-20":1,"2026-05-04":5,"2026-05-11":32,"2026-05-18":10,"2026-05-25":37,"2026-06-01":4,"2026-06-08":4,"2026-06-15":8},"Central East":{"2026-05-04":1,"2026-05-18":31,"2026-06-08":24,"2026-06-15":13},"Central West":{"2026-04-27":8,"2026-05-04":43,"2026-05-11":19,"2026-05-18":3,"2026-06-08":3,"2026-06-15":7},"North":{"2026-04-13":33,"2026-04-20":18,"2026-04-27":33,"2026-06-15":3},"North West":{"2026-04-20":21,"2026-04-27":44,"2026-05-04":10,"2026-05-25":2,"2026-06-15":2},"Arb-Home Counties":{"2026-05-04":4,"2026-05-11":16,"2026-05-18":18,"2026-05-25":5,"2026-06-08":2},"Utilities":{"2026-04-27":11,"2026-05-04":25,"2026-05-11":3,"2026-05-18":4,"2026-06-01":9,"2026-06-15":8},"North East":{"2026-04-20":35,"2026-04-27":12,"2026-05-04":6},"Plant Displays":{"2026-04-27":4,"2026-05-04":5,"2026-05-11":4,"2026-05-18":2,"2026-05-25":2},"GJ Construction North":{"2026-05-04":13,"2026-05-11":1,"2026-05-25":2,"2026-06-01":1}};
 var WEEKLY_PLANNED={"2026-04-13":45,"2026-04-20":75,"2026-04-27":124,"2026-05-04":163,"2026-05-11":153,"2026-05-18":133,"2026-05-25":161,"2026-06-01":56,"2026-06-08":37,"2026-06-15":119,"2026-06-22":110,"2026-06-29":115,"2026-07-06":136,"2026-07-13":117,"2026-07-20":110,"2026-07-27":110,"2026-08-03":15,"2026-08-17":8};
 var DEPOTS=[{n:"Scotland",inst:106,pend:95,canc:30,tot:231},{n:"South East",inst:118,pend:72,canc:24,tot:214},{n:"GJ South West",inst:91,pend:48,canc:12,tot:168},{n:"South West",inst:101,pend:34,canc:18,tot:154},{n:"Central East",inst:69,pend:52,canc:16,tot:140},{n:"Central West",inst:83,pend:33,canc:17,tot:139},{n:"North",inst:87,pend:10,canc:2,tot:99},{n:"North West",inst:79,pend:11,canc:2,tot:92},{n:"Arb-Home Counties",inst:45,pend:35,canc:2,tot:82},{n:"Utilities",inst:60,pend:9,canc:4,tot:73},{n:"North East",inst:53,pend:4,canc:0,tot:57},{n:"Plant Displays",inst:17,pend:26,canc:10,tot:53},{n:"GJ Construction North",inst:17,pend:17,canc:2,tot:37},{n:"GJ Construction South",inst:7,pend:11,canc:1,tot:19},{n:"GJ South East",inst:10,pend:5,canc:3,tot:18},{n:"Arb-South West",inst:12,pend:1,canc:3,tot:16},{n:"NL South West",inst:0,pend:13,canc:0,tot:13},{n:"Arb-South East",inst:8,pend:3,canc:1,tot:12},{n:"Arb-Central",inst:7,pend:3,canc:1,tot:11},{n:"GJ North GM",inst:13,pend:1,canc:0,tot:14},{n:"GJ Midlands Arb",inst:5,pend:4,canc:0,tot:9}];
-var BASELINE=1504,TODAY='2026-06-26';
+var BASELINE=1504,TODAY='2026-06-26',CURRENT_WEEK='2026-06-22';
 
 var depotBody=document.getElementById('depotBody');
 [...DEPOTS].sort(function(a,b){return b.inst-a.inst;}).forEach(function(d){
@@ -171,13 +171,15 @@ function drawWeek(depot){
   var weeks=allWeeks();
   var labels=weeks.map(monLabel);
   var srcA=depot==='ALL'?WEEKLY_ALL:(WEEKLY_DEPOT[depot]||{});
-  var actual=weeks.map(function(w){return w<=TODAY?(srcA[w]||null):null;});
-  var planned=weeks.map(function(w){return w>TODAY?(WEEKLY_PLANNED[w]||null):null;});
+  var actual=weeks.map(function(w){return (w<=TODAY&&w!==CURRENT_WEEK)?(srcA[w]||null):null;});
+  var current=weeks.map(function(w){return w===CURRENT_WEEK?(WEEKLY_PLANNED[w]||null):null;});
+  var planned=weeks.map(function(w){return (w>TODAY&&w!==CURRENT_WEEK)?(WEEKLY_PLANNED[w]||null):null;});
   if(weekChart){weekChart.destroy();}
   weekChart=new Chart(document.getElementById('weekChart').getContext('2d'),{
     type:'bar',
     data:{labels:labels,datasets:[
       {label:'Actual installed',data:actual,backgroundColor:'#1a7f4b',borderRadius:3},
+      {label:'Current week (in progress)',data:current,backgroundColor:'#f97316',borderRadius:3},
       {label:'Planned',data:planned,backgroundColor:'#93c5fd',borderRadius:3}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
