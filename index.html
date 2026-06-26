@@ -394,12 +394,12 @@ Object.entries(depots).sort((a,b) => b[1].installed - a[1].installed).forEach(([
   const p = d.total > 0 ? Math.round((d.installed / d.total) * 100) : 0;
   const tr = document.createElement('tr');
   tr.innerHTML = `
-    <td>${name}</td>
-    <td><strong>${d.installed}</strong></td>
-    <td>${d.pending}</td>
-    <td>${d.total}</td>
-    <td><span class="mini-bar" style="width:${p * 0.8}px"></span></td>
-    <td class="pct-cell">${p}%</td>`;
+    <td>${name}<\/td>
+    <td><strong>${d.installed}<\/strong><\/td>
+    <td>${d.pending}<\/td>
+    <td>${d.total}<\/td>
+    <td><span class="mini-bar" style="width:${p * 0.8}px"><\/span><\/td>
+    <td class="pct-cell">${p}%<\/td>`;
   depotBody.appendChild(tr);
 });
 
@@ -418,12 +418,12 @@ SCHEDULE.forEach(([date, day, site, count]) => {
   if (date !== lastDate) {
     const hdr = document.createElement('tr');
     hdr.className = 'date-header';
-    hdr.innerHTML = `<td colspan="3">${date} &nbsp;·&nbsp; ${day}</td>`;
+    hdr.innerHTML = `<td colspan="3">${date} &nbsp;·&nbsp; ${day}<\/td>`;
     schedBody.appendChild(hdr);
     lastDate = date;
   }
   const tr = document.createElement('tr');
-  tr.innerHTML = `<td></td><td>${site}</td><td style="text-align:right"><span class="badge-count">${count}</span></td>`;
+  tr.innerHTML = `<td><\/td><td>${site}<\/td><td style="text-align:right"><span class="badge-count">${count}<\/span><\/td>`;
   schedBody.appendChild(tr);
 });
 
@@ -450,12 +450,12 @@ function renderTable() {
                 : v.status === 'Missing Adress'  ? 'Missing Address'
                 : v.status;
     tr.innerHTML = `
-      <td><strong>${v.plate}</strong></td>
-      <td class="make-cell" title="${v.make}">${v.make}</td>
-      <td>${v.depot}</td>
-      <td class="address-cell" title="${v.address}">${v.address || '—'}</td>
-      <td><span class="status status-${sk}">${label}</span></td>
-      <td>${v.date || '—'}</td>`;
+      <td><strong>${v.plate}<\/strong><\/td>
+      <td class="make-cell" title="${v.make}">${v.make}<\/td>
+      <td>${v.depot}<\/td>
+      <td class="address-cell" title="${v.address}">${v.address || '—'}<\/td>
+      <td><span class="status status-${sk}">${label}<\/span><\/td>
+      <td>${v.date || '—'}<\/td>`;
     tbody.appendChild(tr);
   });
   document.getElementById('rowCount').textContent = `${filtered.length.toLocaleString()} vehicle${filtered.length !== 1 ? 's' : ''}`;
