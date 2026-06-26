@@ -171,16 +171,15 @@ function drawWeek(depot){
   var weeks=allWeeks();
   var labels=weeks.map(monLabel);
   var srcA=depot==='ALL'?WEEKLY_ALL:(WEEKLY_DEPOT[depot]||{});
-  var actual=weeks.map(function(w){return (w<=TODAY&&w!==CURRENT_WEEK)?(srcA[w]||null):null;});
-  var current=weeks.map(function(w){return w===CURRENT_WEEK?(WEEKLY_PLANNED[w]||null):null;});
-  var planned=weeks.map(function(w){return (w>TODAY&&w!==CURRENT_WEEK)?(WEEKLY_PLANNED[w]||null):null;});
+  var actual=weeks.map(function(w){return w<=TODAY?(srcA[w]||0):null;});
+  var plannedColors=weeks.map(function(w){return w===CURRENT_WEEK?'#f97316':'#93c5fd';});
+  var planned=weeks.map(function(w){return WEEKLY_PLANNED[w]||null;});
   if(weekChart){weekChart.destroy();}
   weekChart=new Chart(document.getElementById('weekChart').getContext('2d'),{
     type:'bar',
     data:{labels:labels,datasets:[
-      {label:'Actual installed',data:actual,backgroundColor:'#1a7f4b',borderRadius:3},
-      {label:'Current week (in progress)',data:current,backgroundColor:'#f97316',borderRadius:3},
-      {label:'Planned',data:planned,backgroundColor:'#93c5fd',borderRadius:3}
+      {label:'Planned',data:planned,backgroundColor:plannedColors,borderRadius:3,order:2},
+      {label:'Actual installed',data:actual,backgroundColor:'#1a7f4b',borderRadius:3,order:1}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'top',labels:{font:{size:12},boxWidth:14,padding:14}},
